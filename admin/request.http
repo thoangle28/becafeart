@@ -1,1 +1,9 @@
-GET http://localhost:8010/api/auth
+POST http://localhost:8010/api/auth/register
+Content-Type: application/json
+
+{
+  "username" : "trinhtran3",
+  "password" : "trantruon1",
+  "email": "test113@mail.com",
+  "nicename": "Trinh Tran4"
+}

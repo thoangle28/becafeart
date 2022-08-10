@@ -16,12 +16,14 @@ const UserSchema = new Schema({
     required: true,
     unique: false
   },
-  emai: {
+  eaddress: {
     type: String,
     required: true,
     unique: true,
+    index: true, 
+    sparse: true
   },
-  displayName: {
+  nicename: {
     type: String,
     required: true
   },
@@ -31,5 +33,5 @@ const UserSchema = new Schema({
   }
 })
 
-
-module.exports = mongoose.model('users', UserSchema)
+const User = mongoose.model('users', UserSchema)
+module.exports = User

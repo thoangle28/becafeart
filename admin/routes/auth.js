@@ -13,8 +13,9 @@ require("dotenv").config();
 
 router.get("/", (req, res) => res.send("Test"));
 
-router.post("/regsiter", async (req, res) => {
-  const { username, password } = res.body;
+router.post("/register", async (req, res) => {
+
+  const { username, password, email, nicename } = req.body;
 
   if (!username || !password) {
     return res
@@ -28,22 +29,39 @@ router.post("/regsiter", async (req, res) => {
     if (user) {
       return res
         .status(200)
-        .json({ success: 200, message: "User already existed!" });
+        .json({ success: 200, message: "User already existed!" })
     }
 
     //add new user
-    const hashedPassword = await argon2.hash(password);
-    const newUser = new User({ username, password: hashedPassword });
+    const hashedPassword = await argon2.hash(password)
+
+    const params = { 
+      username: username, 
+      password: hashedPassword,
+      eaddress: email,
+      nicename: nicename
+    }
+    console.log(params)
+
+    const newUser = new User(params)
     await newUser.save();
 
     //after create new has successful
     //return access token and save to stogare
     const accessToken = jwt.sign(
-      { userId: user._id },
+      { userId: newUser._id },
       process.env.ACCESS_TOKEN_SECRECT
-    );
-    return;
-  } catch (err) {}
+    )
+
+    return res.json({
+      success: true,
+      message: "User has created successfull.",
+      accessToken,
+    });
+
+  } catch (err) {
+    console.log(err.message)
+  }
 });
 
 module.exports = router;
